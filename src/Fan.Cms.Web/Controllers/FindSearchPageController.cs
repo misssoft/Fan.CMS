@@ -38,7 +38,10 @@ namespace Fan.Cms.Web.Controllers
                 };
 
             //detect if serviceUrl and/or defaultIndex is configured.
-            model.IsConfigured = SearchIndexIsConfigured(EPiServer.Find.Configuration.GetConfiguration());
+
+            var findConfiguration = EPiServer.Find.Configuration.GetConfiguration();
+            model.IsConfigured = !findConfiguration.ServiceUrl.IsNullOrEmpty() &&
+                                 !findConfiguration.DefaultIndex.IsNullOrEmpty();
 
             if (model.IsConfigured && !string.IsNullOrWhiteSpace(model.Query))
             {
@@ -107,20 +110,7 @@ namespace Fan.Cms.Web.Controllers
             return query;
         }
 
-        /// <summary>
-        /// Checks if service url and index are configured
-        /// </summary>
-        /// <param name="configuration">Find configuration</param>
-        /// <returns>True if configured, false otherwise</returns>
-        private bool SearchIndexIsConfigured(EPiServer.Find.Configuration configuration)
-        {
-            return (!configuration.ServiceUrl.IsNullOrEmpty()
-                    && !configuration.ServiceUrl.Contains("YOUR_URI")
-                    && !configuration.DefaultIndex.IsNullOrEmpty()
-                    && !configuration.DefaultIndex.Equals("YOUR_INDEX"));
-        }
-
-        /// <summary>
+       /// <summary>
         /// Requires the client resources used in the view.
         /// </summary>
         private void RequireClientResources()

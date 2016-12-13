@@ -33,9 +33,9 @@ namespace Fan.Cms.Web.Controllers
         public ViewResult Index(FindSearchPage currentPage, string q)
         {
             var model = new FindSearchContentModel(currentPage)
-                {
-                    PublicProxyPath = findUIConfiguration.AbsolutePublicProxyPath()
-                };
+            {
+                PublicProxyPath = findUIConfiguration.AbsolutePublicProxyPath()
+            };
 
             //detect if serviceUrl and/or defaultIndex is configured.
 
@@ -70,6 +70,18 @@ namespace Fan.Cms.Web.Controllers
             return View(model);
         }
 
+        //public ActionResult Index(FindSearchPage currentPage, string q)
+        //{
+        //    var vm = new FindSearchContentModel(currentPage);
+        //    if (string.IsNullOrEmpty(q))
+        //    {
+        //        return View(vm);
+        //    }
+        //    var unifiledSearch = searchClient.UnifiedSearchFor(q);
+        //    vm.Hits = unifiledSearch.GetResult();
+        //    return View(vm);
+        //}
+
         private ITypeSearch<ISearchContent> BuildQuery(FindSearchContentModel model)
         {
             var queryFor = searchClient.UnifiedSearch().For(model.Query);
@@ -84,11 +96,11 @@ namespace Fan.Cms.Web.Controllers
                 .UsingAutoBoost(TimeSpan.FromDays(30))
                 //Include a facet whose value is used to show the total number of hits regardless of section.
                 //The filter here is irrelevant but should match *everything*.
-                .TermsFacetFor(x => x.SearchSection)
-                .FilterFacet("AllSections", x => x.SearchSection.Exists())
+                //.TermsFacetFor(x => x.SearchSection)
+                //.FilterFacet("AllSections", x => x.SearchSection.Exists())
                 //Fetch the specific paging page.
-                .Skip((model.PagingPage - 1)*model.CurrentPage.PageSize)
-                .Take(model.CurrentPage.PageSize)
+                //.Skip((model.PagingPage - 1)*model.CurrentPage.PageSize)
+                //.Take(model.CurrentPage.PageSize)
                 //Allow editors (from the Find/Optimizations view) to push specific hits to the top 
                 //for certain search phrases.
                 .ApplyBestBets();
